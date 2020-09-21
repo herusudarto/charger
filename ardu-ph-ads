@@ -1,0 +1,50 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <ADS1115.h>
+
+// Single converters, either single ended of differential
+// Manual for library: http://lygte-info.dk/project/ADS1115Library%20UK.html
+// By HKJ from lygte-info.dk
+
+
+ADS1115 adc;
+float a0,a3,aph,vph;
+void setup() {
+  Serial.begin(9600);
+  Wire.begin();
+  adc.setSpeed(ADS1115_SPEED_16SPS);
+}
+
+void loop() {
+
+  a0=adc.convert(ADS1115_CHANNEL0, ADS1115_RANGE_6144);
+  a3=adc.convert(ADS1115_CHANNEL3, ADS1115_RANGE_6144);
+
+  //Serial.print("Value on input #0 mv ");
+  //Serial.println(a0*0.1875);
+  //Serial.print("Value on input #3 mv ");
+  //Serial.println(a3*0.1875);
+vph=(float)(a0/a3)*5*2/3 ;
+  Serial.print("Real Value ");
+  Serial.println((float)(a0/a3)*5*2/3 );
+  aph=(-5.7 * vph + 21.34);
+  //Serial.print("Value on input #0 is: ");
+  //Serial.println((float)(a0/a3)*5);
+  //Serial.print("Value on input #3 is: ");
+  Serial.print("pH adalah :");
+  Serial.println(aph);
+
+  
+  Serial.println("");
+  Serial.print("A0 ");
+  Serial.println((float)a0);
+  Serial.print("A3 ");
+  Serial.println((float)a3);
+
+//  Serial.print("Value between input #2 and #3 is: ");
+//  Serial.println(adc.convert(ADS1115_CHANNEL23, ADS1115_RANGE_6144));
+
+  Serial.println();
+
+  delay(1000);
+}
